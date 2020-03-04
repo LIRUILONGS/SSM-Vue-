@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                        http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+    <!-- 自动扫描该包，使SpringMVC认为包下用了@Controller注解的类是控制器 -->
+    <context:component-scan base-package="com.liruilong.controller" />
+    <mvc:default-servlet-handler />
+
+    <context:component-scan base-package="com.liruilong.service"/>
+    <!-- 自定义参数绑定 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <!-- 转换器 -->
+        <property name="converters">
+            <!-- 日期类型的转换 -->
+            <bean class="com.liruilong.converter.DateConverter"></bean>
+        </property>
+    </bean>
+
+    <mvc:annotation-driven conversion-service="conversionService">
+    </mvc:annotation-driven>
+
+    <!-- 静态资源需要单独处理，不需要dispatcher servlet -->
+    <mvc:resources location="/css/" mapping="/css/**"></mvc:resources>
+    <mvc:resources location="/fonts/" mapping="/fonts/**"></mvc:resources>
+    <mvc:resources location="/js/" mapping="/js/**"></mvc:resources>
+    <!-- 定义跳转的文件的前后缀 ，视图模式配置-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- controller最后返回的值xx，则页面即是webapp/jsp/xx.jsp -->
+        <property name="prefix" value="/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
+          p:defaultEncoding="UTF-8">
+        <property name="maxUploadSize">
+            <value>104857600</value>
+        </property>
+        <property name="maxInMemorySize">
+            <value>4096</value>
+        </property>
+    </bean>
+
+</beans>

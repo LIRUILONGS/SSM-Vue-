@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liruilong.mapper.LogTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.liruilong.model.LogType" >
+    <id column="id" property="id"/>
+    <result column="logtypemsg" property="logtypemsg" />
+  </resultMap>
+
+
+  <update id="updateLogType" parameterType="com.liruilong.model.LogType" >
+    update logtype
+    <set >
+      <if test="logtypemsg != null" >
+        logtypemsg = #{logtypemsg},
+      </if>
+      <if test="adddate != null" >
+        adddate = #{adddate}
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+  <delete id="deleteLogType" parameterType="java.lang.Integer" >
+    delete from logtype
+    where id = #{id}
+  </delete>
+  <!--List<LogType> selectByPrimaryKey();-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" >
+    select 
+    *
+    from logtype
+  </select>
+  <!--List<LogType> getLogTypeAll(@Param("page") Integer page,@Param("size") Integer size,@Param("logtype") Integer logtype);-->
+  <select id="getLogTypeAll" resultMap="BaseResultMap" >
+    select
+   *
+    from logtype
+    <where>
+      <if test="logtypet !=null">
+        and  id = #{logtypet}
+      </if>
+    </where>
+    order by id desc limit #{page},#{size}
+  </select>
+  <select id="LogTypeAlltotal" resultType="java.lang.Long">
+    select
+    count(*)
+    from logtype
+    <if test="logtype != null">
+     where id = #{logtype}
+    </if>
+  </select>
+  <insert id="addLogType" parameterType="com.liruilong.model.LogType" >
+    insert into logtype (id, logtypemsg,adddate)
+    values (#{id,}, #{logtypemsg},#{adddate})
+  </insert>
+</mapper>

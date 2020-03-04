@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liruilong.mapper.OpLogMapper">
+    <resultMap id="BaseResultMap" type="com.liruilong.model.OpLog">
+        <id column="id" property="id"  />
+        <result column="logtype" property="logtype"   />
+        <result column="addDate" property="adddate"    />
+        <result column="operate" property="operate"     />
+        <result column="hrname" property="hrname"     />
+    </resultMap>
+    <resultMap id="BaseResultMap1" type="com.liruilong.model.OpLog">
+        <id column="id" property="id"  />
+        <result column="logtype" property="logtype"   />
+        <result column="addDate" property="adddate"    />
+        <result column="operate" property="operate"     />
+        <result column="hrname" property="hrname"     />
+        <association property="logTypss" javaType="com.liruilong.model.LogType">
+            <id column="lid" property="id"  />
+            <result column="llogtypemsg" property="logtypemsg"/>
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, logtype, addDate, operate, hrname
+  </sql>
+    <select id="selectByPrimaryKey" resultType="java.lang.Long">
+    select  count(*)
+    from oplog o
+    <where>
+        <if test="logtype !=null">
+           and  o.logtype = #{logtype}
+        </if>
+        <if test="beginDateScope !=null">
+            and o.addDate between #{beginDateScope[0]} and #{beginDateScope[1]}
+        </if>
+    </where>
+    </select>
+    <select id="getAllsOplog" resultMap="BaseResultMap1">
+        select o.id, o.logtype, o.addDate, o.operate, o.hrname , l.id as lid, l.logtypemsg as llogtypemsg
+        FROM oplog o, logtype l
+        WHERE o.logtype=l.id
+        <if test="logtype !=null">
+            and o.logtype = #{logtype}
+        </if>
+        <if test="beginDateScope !=null">
+            and o.addDate between #{beginDateScope[0]} and #{beginDateScope[1]}
+        </if>
+        order by o.id desc
+        <if test="page !=null and size!=null">
+            limit #{page},#{size}
+        </if>
+    </select>
+    <select id="dataViewOplogHr" resultType="com.liruilong.model.datas.DataModel">
+        SELECT hrname AS name ,COUNT(*) AS sum  FROM oplog GROUP BY hrname;
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from oplog
+    where id = #{id    }
+  </delete>
+    <insert id="insert" parameterType="com.liruilong.model.OpLog">
+    insert into oplog (logtype, addDate,
+      operate, hrname)values (#{logtype}, #{adddate}, #{operate}, #{hrname})
+  </insert>
+    <insert id="addopls">
+         insert into oplog (logtype, addDate,
+      operate, hrname) values
+       <foreach collection="list" item="op" separator=",">
+       (#{op.logtype}, #{op.adddate}, #{op.operate}, #{op.hrname})
+       </foreach>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.liruilong.model.OpLog">
+        update oplog
+        <set>
+            <if test="logtype != null">
+                logtype = #{logtype    },
+            </if>
+            <if test="adddate != null">
+                addDate = #{adddate},
+            </if>
+            <if test="operate != null">
+                operate = #{operate},
+            </if>
+            <if test="hrname != null">
+                hrname = #{hrname},
+            </if>
+        </set>
+        where id = #{id  }
+    </update>
+
+</mapper>

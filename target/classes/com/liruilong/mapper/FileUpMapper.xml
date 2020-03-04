@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liruilong.mapper.FileUpMapper">
+    <!--自定义结果集-->
+   <!-- <resultMap id="file" type="com.liruilong.model.FileUp">
+        <id property="fileld" column="fileld"/>
+        <result property="fileName" column="fileName"/>
+        <result property="filePath" column="filePath"/>
+        <result property="fileSize" column="fileSize"/>
+        <result property="fileType" column="fileType"/>
+        <result property="fileDate" column="fileDate"/>
+    </resultMap>
+-->
+    <resultMap id="BaseResultMap" type="com.liruilong.model.FileUp" >
+        <id column="fileld" property="fileld" jdbcType="INTEGER" />
+        <result column="filePath" property="filePath" jdbcType="VARCHAR" />
+        <result column="fileName" property="fileName" jdbcType="VARCHAR" />
+        <result column="fileSize" property="fileSize" jdbcType="VARCHAR" />
+        <result column="fileType" property="fileType" jdbcType="VARCHAR" />
+        <result column="fileDate" property="fileDate" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <resultMap id="dataViewFileTypeMap" type="com.liruilong.model.datas.DataModel">
+    </resultMap>
+    <!-- //上传文件
+    int addFile(File_Up file_up)throws Exception;-->
+    <insert id="addFile" keyProperty="fileld" useGeneratedKeys="true">
+        INSERT  INTO fileup VALUES (null,#{filePath},#{fileName},#{fileSize},#{fileType},#{fileDate})
+    </insert>
+    <select id="getAllFiles" resultMap="BaseResultMap">
+        SELECT * FROM fileup order by fileld desc
+        <!--<where>
+            <if test="fileUp.filePath != null" >
+                filePath = #{fileUp.filePath},
+            </if>
+            <if test="fileUp.fileName != null" >
+                fileName = #{fileUp.fileName},
+            </if>
+            <if test="fileUp.fileSize != null" >
+                fileSize = #{fileUp.fileSize},
+            </if>
+            <if test="fileUp.fileType != null" >
+                fileType = #{fileUp.fileType},
+            </if>
+            <if test="fileUp.fileDate != null" >
+                fileDate = #{fileUp.fileDate},
+            </if>
+        </where>-->
+
+        <if test="page !=null  and size !=null">
+            limit #{page},#{size}
+        </if>
+    </select>
+    <select id="selectByPrimaryKey" resultType="java.lang.Long">
+        SELECT count(*) FROM fileup
+       <!-- <where>
+            <if test="fileUp.filePath != null" >
+                filePath = #{fileUp.filePath},
+            </if>
+            <if test="fileUp.fileName != null" >
+                fileName = #{fileUp.fileName},
+            </if>
+            <if test="fileUp.fileSize != null" >
+                fileSize = #{fileUp.fileSize},
+            </if>
+            <if test="fileUp.fileType != null" >
+                fileType = #{fileUp.fileType},
+            </if>
+            <if test="fileUp.fileDate != null" >
+                fileDate = #{fileUp.fileDate},
+            </if>
+        </where>-->
+    </select>
+    <select id="selectByKey" parameterType="java.lang.Integer" resultType="com.liruilong.model.FileUp">
+        select
+        *
+        from fileup
+        where fileld = #{fileld}
+    </select>
+    <select id="dataViewFileType" resultType="com.liruilong.model.datas.DataModel">
+        SELECT fileType AS name, COUNT(*) AS sum  FROM fileup GROUP BY fileType
+    </select>
+    <select id="dataFileDate" resultType="com.liruilong.model.datas.DataModel">
+         SELECT DATE_FORMAT(fileDate,"%Y-%m-%d") AS name , COUNT(*) AS sum FROM fileup GROUP BY DATE_FORMAT(fileDate,"%Y-%m-%d") ORDER BY name DESC LIMIT 30;
+    </select>
+
+
+</mapper>

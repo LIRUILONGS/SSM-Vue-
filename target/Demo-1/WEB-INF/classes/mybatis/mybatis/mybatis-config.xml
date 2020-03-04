@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+     <!--   <setting name="lazyLoadingEnabled" value="true"/>&lt;!&ndash;打开延迟加载开关&ndash;&gt;
+        <setting name="aggressiveLazyLoading" value="false"/>&lt;!&ndash;将积极加载改为按需加载&ndash;&gt;
+        <setting name="cacheEnabled" value="true" />
+        <setting name="useGeneratedKeys" value="true" />
+        <setting name="defaultExecutorType" value="REUSE" />-->
+        <setting name="logImpl" value="log4j" />
+        <!--开启驼峰标识-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+</configuration>
