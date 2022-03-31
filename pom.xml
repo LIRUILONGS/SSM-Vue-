@@ -19,7 +19,7 @@
     <maven.compiler.target>1.7</maven.compiler.target>
     <webVersion>4.0</webVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <spring.version>5.1.4.RELEASE</spring.version>
+    <spring.version>5.3.18</spring.version>
   </properties>
 
   <dependencies>
